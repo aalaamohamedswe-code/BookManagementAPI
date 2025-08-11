@@ -1,0 +1,34 @@
+﻿@BookManagementAPI_HostAddress = https://localhost:7195
+
+POST {{BookManagementAPI_HostAddress}}/api/books
+Content-Type: application/json
+
+{
+  "id":1,
+  "Title" : "driven_to_distraction",
+  "Author" : "Hallowell",
+  "Year" : 1992
+}
+
+###
+
+GET {{BookManagementAPI_HostAddress}}/api/books/1
+
+###
+
+GET {{BookManagementAPI_HostAddress}}/api/books
+
+###
+
+DELETE {{BookManagementAPI_HostAddress}}/api/books/1
+
+###
+
+PUT {{BookManagementAPI_HostAddress}}/api/books/1
+Content-Type: application/json
+{
+  "Title" : "delivered_from_distraction",
+  "Author" : "Hallowell",
+  "Year" : 2004
+}
+###
