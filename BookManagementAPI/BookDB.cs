@@ -2,7 +2,7 @@
 
 namespace BookManagementAPI
 {
-    class BookDB : DbContext
+    public class BookDB : DbContext
     {
     public BookDB(DbContextOptions<BookDB> options)
     : base(options)

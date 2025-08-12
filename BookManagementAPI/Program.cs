@@ -1,4 +1,5 @@
 using BookManagementAPI;
+using BookManagementAPI.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using static System.Reflection.Metadata.BlobBuilder;
@@ -6,10 +7,11 @@ using static System.Reflection.Metadata.BlobBuilder;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<BookDB>(opt => opt.UseInMemoryDatabase("BookDb"));
+builder.Services.AddScoped<IBookRepository, BookRepository>();
 
 var app = builder.Build();
 
-app.MapPost("/api/books", (Book book, BookDB context) =>
+app.MapPost("/api/books", (Book book, IBookRepository repo) =>
 {
     var validationResults = new List<ValidationResult>();
     var validationContext = new ValidationContext(book);
@@ -18,47 +20,53 @@ app.MapPost("/api/books", (Book book, BookDB context) =>
     {
         return Results.BadRequest(validationResults);
     }
-    context.Books.Add(book);
-    context.SaveChanges();
 
-    return Results.Created($"/books/{book.Id}", book);
+    var createdBook = repo.AddBook(book);
+    return Results.Created($"/books/{createdBook.Id}", createdBook);
 });
-app.MapGet("/api/books/{id}", (int id, BookDB db) =>
+
+app.MapGet("/api/books/{id}", (int id, IBookRepository repo) =>
 {
-    var book = db.Books.Find(id);  
+    var book = repo.GetBook(id);
     if (book != null)
-        return Results.Ok(book);   
+        return Results.Ok(book);
     else
-        return Results.NotFound(); 
-});
-app.MapGet("/api/books", (BookDB db) =>
-{
-    var books = db.Books.ToList();  
-    return Results.Ok(books);       
+        return Results.NotFound();
 });
 
-app.MapDelete("/api/books/{id}", (int id, BookDB db) =>
+app.MapGet("/api/books", (IBookRepository repo) =>
 {
-    var book = db.Books.Find(id);  
+    var books = repo.GetBooks();
+    return Results.Ok(books);
+});
+
+app.MapDelete("/api/books/{id}", (int id, IBookRepository repo) =>
+{
+    var book = repo.GetBook(id);
     if (book == null)
-        return Results.NotFound();  
+        return Results.NotFound();
 
-    db.Books.Remove(book);  
-    db.SaveChanges();      
-
-    return Results.NoContent();  
+    repo.DeleteBook(id);
+    return Results.NoContent();
 });
-app.MapPut("/api/books/{id}", (int id, Book updatedBook, BookDB db) =>
+
+app.MapPut("/api/books/{id}", (int id, Book updatedBook, IBookRepository repo) =>
 {
-    var book = db.Books.Find(id);
+    var book = repo.GetBook(id);
     if (book == null) return Results.NotFound();
 
-    book.Title = updatedBook.Title;
-    book.Author = updatedBook.Author;
-    book.Year = updatedBook.Year;
+    var validationResults = new List<ValidationResult>();
+    var validationContext = new ValidationContext(updatedBook);
 
-    db.SaveChanges();
-    return Results.Ok();
+    if (!Validator.TryValidateObject(updatedBook, validationContext, validationResults, true))
+    {
+        return Results.BadRequest(validationResults);
+    }
+
+    updatedBook.Id = id;
+    var result = repo.UpdateBook(updatedBook);
+    return Results.Ok(result);
 });
+
 
 app.Run();
