@@ -1,4 +1,6 @@
-﻿namespace BookManagementAPI.Repositories
+﻿using BookManagementAPI.Models;
+
+namespace BookManagementAPI.Services
 {
     public interface IBookRepository
     {

@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-namespace BookManagementAPI.Repositories
+﻿using BookManagementAPI.Models;
+using Microsoft.EntityFrameworkCore;
+namespace BookManagementAPI.Services
 {
     public class BookRepository : IBookRepository
     {

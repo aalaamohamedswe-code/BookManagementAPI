@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BookManagementAPI
+namespace BookManagementAPI.Models
 {
     public class Book
     {
@@ -10,6 +10,6 @@ namespace BookManagementAPI
         [Required(ErrorMessage = "Author is required")]
         public string Author { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Year must be greater than 0")]
-        public int Year { get; set; }        
+        public int Year { get; set; }
     }
 }
