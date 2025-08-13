@@ -1,7 +1,8 @@
 ﻿using BookManagementAPI.Models;
 using Microsoft.EntityFrameworkCore;
-namespace BookManagementAPI.Services
-{
+using BookManagementAPI.interfaces;
+
+namespace BookManagementAPI.Services;
     public class BookRepository : IBookRepository
     {
         private readonly BookDB _context;
@@ -49,4 +50,3 @@ namespace BookManagementAPI.Services
             return null;
         }
     }
-}

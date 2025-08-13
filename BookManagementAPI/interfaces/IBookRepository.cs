@@ -1,6 +1,6 @@
 ﻿using BookManagementAPI.Models;
 
-namespace BookManagementAPI.@interface
+namespace BookManagementAPI.interfaces
 {
     public interface IBookRepository
     {
