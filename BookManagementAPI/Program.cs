@@ -13,6 +13,14 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<BookDB>(opt => opt.UseInMemoryDatabase("BookDb"));
 builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp",
+        builder => builder
+            .WithOrigins("http://localhost:56440", "http://localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
 
 var app = builder.Build();
 
@@ -23,6 +31,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("AllowAngularApp");
 app.UseAuthorization();
 app.MapControllers();
 
