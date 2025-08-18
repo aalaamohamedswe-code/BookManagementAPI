@@ -11,5 +11,7 @@ namespace BookManagementAPI.Models
         public string Author { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Year must be greater than 0")]
         public int Year { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime? PublishDate { get; set; }
     }
 }

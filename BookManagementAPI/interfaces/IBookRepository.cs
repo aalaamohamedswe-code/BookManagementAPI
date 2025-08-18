@@ -6,8 +6,10 @@ namespace BookManagementAPI.interfaces
     {
         IEnumerable<Book> GetBooks();
         Book? GetBook(int bookId);
-        Book AddBook(Book book);
-        Book? UpdateBook(Book book);
+        // Book AddBook(Book book);
+        // Book? UpdateBook(Book book);
+        Book? SaveBook(Book book);
+
         void DeleteBook(int bookId);
     }
 }

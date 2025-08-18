@@ -33,7 +33,7 @@ namespace BookManagementAPI.Controllers
             }
             return Ok(book);
         }
-
+/*
         [HttpPost]
         public IActionResult CreateBook(Book book)
         {
@@ -69,6 +69,23 @@ namespace BookManagementAPI.Controllers
                 return NotFound();
             }
             return Ok(updatedBook);
+        }
+*/
+        [HttpPost("save")]
+        public IActionResult SaveBook(Book book)
+        {
+            var validationResults = new List<ValidationResult>();
+            var validationContext = new ValidationContext(book);
+            if (!Validator.TryValidateObject(book, validationContext, validationResults, true))
+            {
+                return BadRequest(validationResults);
+            }
+            var savedBook = _bookRepository.SaveBook(book);
+            if (savedBook == null)
+                return NotFound($"Book with Id {book.Id} not found.");
+            if (book.Id == 0) 
+                return CreatedAtAction(nameof(GetBook), new { id = savedBook.Id }, savedBook);
+            return Ok(savedBook);
         }
 
         [HttpDelete("{id}")]
