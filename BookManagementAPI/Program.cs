@@ -6,12 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<BookDB>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<BookDB>(options => options.UseNpgsql(connectionString));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer(); 
 builder.Services.AddSwaggerGen();           
-
-builder.Services.AddDbContext<BookDB>(opt => opt.UseInMemoryDatabase("BookDb"));
+// builder.Services.AddDbContext<BookDB>(opt => opt.UseInMemoryDatabase("BookDb"));
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddCors(options =>
 {
